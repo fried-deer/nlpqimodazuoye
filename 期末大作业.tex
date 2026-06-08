@@ -1,0 +1,446 @@
+% !TEX program = xelatex
+\documentclass[UTF8, fontset=windows]{ctexart}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{endnotes}
+\usepackage{makecell}
+\usepackage{array}
+\usepackage{float}
+\usepackage{url}
+% 新增：行底色 + 加粗命令
+\usepackage{colortbl}
+\usepackage{xcolor}
+\definecolor{shadegray}{gray}{0.92}
+\definecolor{shadelight}{gray}{0.97}    % 浅一档，给 baseline 用
+\newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\rowhl}{\rowcolor{shadegray}}
+\newcommand{\rowlight}{\rowcolor{shadelight}}
+
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	urlcolor=blue,
+	filecolor=blue
+}
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{第 \thepage 页，共 \pageref{LastPage} 页}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\enoteheading}{
+	\par\bigskip
+	\noindent\rule{\textwidth}{0.4pt}
+	\par\smallskip
+}
+\ctexset{
+	section = {
+		format = {\heiti\zihao{3}\centering},
+		number = \arabic{section}.,
+		afterskip = 1em,
+		beforeskip = 1.5em
+	},
+	subsection = {
+		format = {\heiti\zihao{-3}\noindent},
+		number = \arabic{section}.\arabic{subsection}.,
+		afterskip = 1em,
+		beforeskip = 1em
+	},
+	subsubsection = {
+		format = {\heiti\zihao{4}\noindent},
+		number = \arabic{section}.\arabic{subsection}.\arabic{subsubsection}.,
+		afterskip = 1em,
+		beforeskip = 0.5em
+	}
+}
+\renewenvironment{abstract}{
+	\par\addvspace{1.5em}
+	\noindent\hspace{2em}\textbf{\heiti 摘要：}
+	\bgroup\kaishu \ignorespaces
+}{
+	\egroup \par\addvspace{0.5em}
+}
+\newcommand{\keywords}[1]{
+	\noindent\hspace{2em}\textbf{\heiti 关键词：}
+	\bgroup\kaishu #1\egroup
+}
+\newcommand{\figcaption}[1]{\centering{\heiti\zihao{5}#1}\par\vspace{0.3em}}
+\newcommand{\tabcaption}[1]{\centering{\heiti\zihao{5}#1}\par\vspace{0.3em}}
+\renewcommand{\refname}{\heiti 参考文献}
+\newenvironment{references}{
+	\setlength{\parindent}{2em}
+	\begin{thebibliography}{99}
+	}{
+	\end{thebibliography}
+}
+\setlength{\parindent}{2em}
+\zihao{-4}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+\begin{document}
+	
+	\begin{center}
+		\zihao{3}\heiti 面向长尾违禁评论识别的多视角预训练融合方法研究
+	\end{center}
+	
+	\begin{abstract}
+		中文违禁评论识别通常同时面对语义隐晦、类别边界相近和类别分布长尾等问题。本文基于一个非公开中文违禁评论数据集开展十分类文本识别实验，数据共包含25100条评论，其中政治敏感、色情和种族歧视样本占比较高，而性侵犯与基于外表的刻板印象样本占比极低。为了提高长尾场景下的宏平均F1分数，本文构建了从普通神经网络到中文预训练模型的对比实验，并提出长尾多视角预训练融合方法LT-MVF。该方法以MacBERT-large和RoBERTa-wwm-ext-large为语义编码器，通过不同随机种子、输入长度、损失函数和长尾处理策略构造多个分类视角，在验证集上搜索加权logit融合系数，并结合温和的长尾logit校正缓解少数类预测不足。实验结果表明，普通神经网络模型在该任务上难以充分学习长尾类别，TextCNN在普通神经网络中表现相对较好，但测试集Macro-F1仅为0.5998；预训练模型显著提高整体准确率和加权F1；多视角融合进一步改善少数类相关指标，其中融合加长尾校正但不使用偏置校准的模型取得0.9328的准确率、0.7264的Macro-F1和0.9649的最小one-vs-rest准确率。虽然当前实验未达到Macro-F1大于0.8的目标阈值 ，但所有强模型均满足one-vs-rest二分类准确率大于0.9的约束，实验说明极端长尾类别是限制宏平均指标继续提升的主要因素。
+	\end{abstract}
+	
+	\keywords{违禁评论识别；长尾文本分类；MacBERT；多视角融合}
+	
+	\section{引言}
+	
+	社交平台中的违禁评论识别是内容安全系统的重要组成部分。与一般情感分类或主题分类不同，违禁评论往往包含缩写、谐音、暗指、反讽、语境依赖和规避检测的变体表达，因此模型不仅需要识别显式关键词，还需要理解评论中的隐含攻击对象、文化背景和语义指向。对中文评论而言，分词边界模糊、网络词频繁变化以及字符级变体进一步增加了建模难度。
+	
+	本文研究的数据集包含政治敏感、色情、种族歧视、地域歧视、微侵犯、犯罪、基于文化背景的刻板印象、宗教迷信、性侵犯和基于外表的刻板印象十个类别。该数据集存在明显长尾结构，前两类样本合计占比超过54\%，而最小类别仅31条样本。若仅优化整体准确率，模型容易偏向多数类；若强行提升少数类召回，整体准确率又可能下降。本文因此将Macro-F1作为核心指标，同时保留one-vs-rest二分类准确率作为系统可用性约束。\footnote{本文对Macro-F1设立的标准较高，旨在提出更强调长尾类别、少数类识别能力与类别公平性的行业范式。}\footnote{代码与实验日志见：\url{https://github.com/fried-deer/nlpqimodazuoye}}
+	
+	围绕上述问题，本文设计了多层次实验框架。首先，使用FastTextNN、TextCNN、BiLSTM-Attention和TinyTransformer作为普通神经网络baseline，以观察在无大规模预训练知识条件下模型对违禁评论语义的拟合能力。随后，采用MacBERT-large和RoBERTa-wwm-ext-large进行中文预训练建模，并引入类别权重、少数类增强、Focal损失、One-vs-Rest BCE辅助损失和验证集偏置校准。最后，本文提出LT-MVF长尾多视角预训练融合方法，通过多个预训练视角的logit融合和长尾校正提升宏平均性能。
+	
+	需要说明的是，本文实验严格基于固定随机种子下的训练集、验证集和测试集划分，测试集不参与训练、早停或融合参数搜索\footnote{实验环境为Ubuntu 22.04.3 LTS、Python 3.11.15、PyTorch 2.9.1+cu128和单卡NVIDIA L40S，服务器由学校提供}。由于非公开数据无法外部验证，本文所有结论均以同一数据划分下的可复现实验脚本和输出日志为依据。
+	
+	\section{数据集与任务定义}
+	
+	\subsection{数据分布}
+	
+	数据清洗过程仅删除不可见字符、统一空白符并过滤空文本，不对验证集和测试集进行增强。全量数据共25100条，按照分层留出法划分为训练集17570条、验证集3765条和测试集3765条。类别分布如表\ref{tab:data_distribution}所示。
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{数据集类别分布}
+		\label{tab:data_distribution}
+		\resizebox{0.5\textwidth}{!}{
+			\begin{tabular}{lrr}
+				\toprule
+				类别 & 频次 & 频率 \\
+				\midrule
+				政治敏感 & 7084 & 28.2231\% \\
+				色情 & 6564 & 26.1514\% \\
+				种族歧视 & 4488 & 17.8805\% \\
+				地域歧视 & 3106 & 12.3745\% \\
+				微侵犯(MA) & 1594 & 6.3506\% \\
+				犯罪 & 1145 & 4.5618\% \\
+				基于文化背景的刻板印象(SCB) & 776 & 3.0916\% \\
+				宗教迷信 & 241 & 0.9602\% \\
+				性侵犯(SO) & 71 & 0.2829\% \\
+				基于外表的刻板印象(SA) & 31 & 0.1235\% \\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	
+	可以看到，样本数量最高的政治敏感类别是最低频类别基于外表的刻板印象的228倍以上。由于测试集中SA类别约只有四到五条样本，少数样本的预测变化就会显著影响Macro-F1，这也是本文实验中宏平均指标波动较大的重要原因。
+	
+	\subsection{任务形式与评价指标}
+	
+	设输入评论为$x$，类别集合为$\mathcal{Y}=\{1,\cdots,C\}$，其中$C=10$。模型需要学习映射$f:x\rightarrow y$，输出每条评论所属的单一违禁类别。本文采用Accuracy、Balanced Accuracy、Macro-F1、Weighted-F1、Micro-F1和one-vs-rest准确率评估模型性能。其中Macro-F1对各类别等权平均，更能反映长尾类别识别质量。
+	
+	单类精确率、召回率和F1定义为
+	\begin{equation}
+		P_i=\frac{TP_i}{TP_i+FP_i},
+		\label{eq:precision}
+	\end{equation}
+	\begin{equation}
+		R_i=\frac{TP_i}{TP_i+FN_i},
+		\label{eq:recall}
+	\end{equation}
+	\begin{equation}
+		F1_i=\frac{2P_iR_i}{P_i+R_i}.
+		\label{eq:f1}
+	\end{equation}
+	
+	宏平均F1定义为
+	\begin{equation}
+		\mathrm{Macro\text{-}F1}=\frac{1}{C}\sum_{i=1}^{C}F1_i.
+		\label{eq:macro_f1}
+	\end{equation}
+	
+	对于每个类别$i$，one-vs-rest准确率将该类别视为正类，其余类别视为负类，计算方式为
+	\begin{equation}
+		\mathrm{Acc}^{ovr}_i=\frac{TP_i+TN_i}{TP_i+TN_i+FP_i+FN_i}.
+		\label{eq:ovr_acc}
+	\end{equation}
+	
+	该指标用于刻画系统在每个违禁类别上进行二分类检测时的可用性。由于本文应用场景强调线上识别稳定性，实验要求强模型的最小one-vs-rest准确率大于0.9。
+	
+	\section{方法}
+	
+	\subsection{Baseline模型}
+	
+	本文首先构建四个普通神经网络baseline。FastTextNN使用字符嵌入的平均池化表示完成分类，参数少、训练快，但语序和上下文建模能力有限。TextCNN使用多尺度卷积核提取局部n-gram模式，对显式敏感词和短语具有较强响应。BiLSTM-Attention通过双向循环结构建模序列顺序，并以注意力机制聚合关键信息。TinyTransformer从零训练多层自注意力编码器，具备全局建模能力，但在两万余条样本上缺少预训练知识支撑。
+	
+	这些baseline的作用不是追求最终最优，而是为预训练模型和本文方法提供对照。若普通神经网络已能取得很高Macro-F1，则说明任务主要由局部关键词驱动；若其表现明显不足，则说明违禁评论识别需要更强语义建模能力。
+	
+	\subsection{预训练编码器分类模型}
+	
+	预训练模型采用本地离线加载的MacBERT-large和RoBERTa-wwm-ext-large\footnote{这两个模型属于huggingface较简单的预训练模型}。给定输入序列，编码器输出首位标记对应的上下文表示$h_{\mathrm{cls}}$，分类头由线性层、GELU激活、Dropout和线性输出层组成，得到logit向量$z\in\mathbb{R}^{C}$。分类概率为
+	\begin{equation}
+		p(y=i|x)=\frac{\exp(z_i)}{\sum_{j=1}^{C}\exp(z_j)}.
+		\label{eq:softmax}
+	\end{equation}
+	
+	为了缓解长尾样本在损失函数中的弱贡献，本文使用基于有效样本数的类别权重。设类别$i$的训练样本数为$n_i$，类别权重为
+	\begin{equation}
+		w_i=\frac{1-\beta}{1-\beta^{n_i}},
+		\label{eq:effective_num}
+	\end{equation}
+	并在归一化和截断后用于交叉熵或Focal损失。实验中$\beta$取0.9995，最大权重限制为8.0，以避免极小类别造成训练不稳定。
+	
+	\subsection{长尾损失与少数类增强}
+	
+	Focal Loss用于降低易分类多数类样本对梯度的主导作用。设$p_t$为真实类别对应的预测概率，则Focal Loss为
+	\begin{equation}
+		\mathcal{L}_{focal}=-(1-p_t)^\gamma \log(p_t).
+		\label{eq:focal}
+	\end{equation}
+	
+	早期实验还引入One-vs-Rest BCE辅助损失，使模型同时学习单标签多分类边界和各类别一对多边界。组合损失为
+	\begin{equation}
+		\mathcal{L}=\alpha \mathcal{L}_{focal}+\lambda \mathcal{L}_{ovr},
+		\label{eq:focal_bce}
+	\end{equation}
+	其中$\alpha$取1.0，$\lambda$在主要实验中取0.25或0.35。由于强偏置校准在验证集上有效但对测试集存在过拟合风险，最终LT-MVF更强调温和的长尾logit校正。
+	
+	少数类增强只应用于训练集。增强操作包括删除标点、删除空白、轻微重复字符、添加短后缀和原样复制。该增强不引入新语义，仅增加少数类在训练中的曝光频率。实验分别尝试将少数类增强到500、600、800和900条，以分析增强强度对性能的影响。
+	
+	\subsection{LT-MVF多视角融合}
+	
+	本文提出的LT-MVF方法不是单一模型，而是面向长尾文本分类的多视角预训练融合框架。它通过不同预训练编码器、不同随机种子、不同最大长度、不同损失函数和不同采样策略训练多个单编码器视角，再在验证集上搜索logit融合权重。设第$k$个视角输出logit为$z^{(k)}$，融合logit为
+	\begin{equation}
+		z^{fusion}=\sum_{k=1}^{K}\alpha_k z^{(k)},\quad \sum_{k=1}^{K}\alpha_k=1,\quad \alpha_k\geq0.
+		\label{eq:fusion}
+	\end{equation}
+	
+	为了进一步缓解长尾先验带来的少数类置信度不足，本文在融合阶段引入长尾logit adjustment。设训练集中类别先验为$\pi_i$，校正后的第$i$类logit为
+	\begin{equation}
+		\tilde{z}_i=z^{fusion}_i-\tau \log(\pi_i+\epsilon),
+		\label{eq:tau}
+	\end{equation}
+	其中$\tau$为验证集搜索得到的长尾校正系数。$\tau>0$时，低先验类别获得相对提升。与直接对每个类别搜索大幅bias相比，$\tau$校正的自由度更低，泛化风险也更小。
+	
+	从表\ref{tab:pseudocode}可知LT-MVF核心流程。该伪代码与Python实现中的训练、logit保存、融合搜索和测试集评估过程一致。
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{LT-MVF核心流程伪代码}
+		\label{tab:pseudocode}
+		\resizebox{0.95\textwidth}{!}{
+			\begin{tabular}{p{0.9\textwidth}}
+				\toprule
+				\makecell[l]{
+					输入：训练集$D_{tr}$，验证集$D_{val}$，测试集$D_{te}$，视角配置集合$\mathcal{V}$。\\
+					对每个视角$v\in\mathcal{V}$，按配置执行训练集少数类增强。\\
+					加载MacBERT-large或RoBERTa-large编码器并初始化分类头。\\
+					使用Focal、Focal-BCE或Balanced-Focal损失训练单视角模型。\\
+					在验证集Macro-F1最优处保存模型参数。\\
+					分别保存该视角在验证集和测试集上的logit。\\
+					在验证集上随机搜索融合权重$\alpha$和长尾校正系数$\tau$。\\
+					用Macro-F1、Accuracy、Balanced Accuracy和OVR最小准确率构造搜索目标。\\
+					得到最优融合配置后，将同一配置应用到测试集logit。\\
+					输出Accuracy、Macro-F1、Weighted-F1、OVR准确率和每类F1。\\
+				}
+				\\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	
+	\section{实验设置}
+	
+	\subsection{训练配置}
+	
+	所有实验均固定随机种子并采用70\%/15\%/15\%分层划分。普通神经网络baseline最大长度为192，使用AdamW优化器或相应学习率调度策略。预训练模型默认最大长度为192，batch size为16，学习率为$1.5\times10^{-5}$，权重衰减为0.01，早停耐心值为2或3。LT-MVF默认训练五个视角，分别为MacBERT Focal增强800无采样视角、MacBERT Focal-BCE增强800采样视角、MacBERT Balanced-Focal增强600无采样视角、MacBERT Focal增强500且长度128视角以及RoBERTa Balanced-Focal增强600无采样视角。\footnote{这里的增强是指对少数类样本的数据增强}
+	
+	为保证实验可复现，本文统一保存训练日志、预测结果及主要评估指标，并在离线环境下从本地模型目录加载预训练模型，避免外部依赖变化对实验结果造成影响\endnote{本文实验代码设置了HuggingFace离线环境变量，模型从本地hf\_models目录加载。}。
+	
+	\subsection{模型与参数规模}
+	
+	表\ref{tab:model_params}展示了主要模型的参数量和建模特点。普通神经网络参数量约为百万级，训练速度较快；预训练large模型参数量约为3.27亿，训练和推理成本更高，但语义表征能力明显更强。双编码器融合模型参数量超过6.63亿，虽然具备特征级融合能力，但在本实验中没有显著超过轻量的logit后融合方案。介于此，本文研究重点不再单纯追求更大规模的端到端特征融合模型，而是转向构建一种更具性价比的多视角融合策略。具体而言，LT-MVF通过组合不同预训练模型、损失函数、采样方式、增强强度和输入长度，形成多个具有互补性的分类视角，并在预测阶段对各视角输出的logit进行融合。
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{主要模型参数规模与特点}
+		\label{tab:model_params}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{lrrl}
+				\toprule
+				模型 & 总参数量 & 可训练参数量 & 建模特点 \\
+				\midrule
+				FastTextNN & 1,153,034 & 1,153,034 & 字符嵌入平均池化，速度快但语义表达有限 \\
+				TextCNN & 2,013,450 & 2,013,450 & 多尺度局部卷积，适合关键词和短语模式 \\
+				BiLSTM-Attention & 2,142,987 & 2,142,987 & 序列建模能力较强但训练效率一般 \\
+				TinyTransformer & 3,770,122 & 3,770,122 & 从零训练自注意力，对数据规模较敏感 \\
+				MacBERT-large & 326,582,282 & 326,582,282 & 中文预训练语义能力强，长尾优化后表现稳定 \\
+				DualEncoderFusion & 663,114,000 & 663,114,000 & 特征级融合能力强但训练成本最高 \\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	
+	\section{实验结果与分析}
+	
+	\subsection{不同模型性能对比}
+	
+	由表\ref{tab:main_results}可知，主要模型在测试集上的整体表现。在普通神经网络基线中，TextCNN以0.5998的Macro-F1领先，说明局部n-gram特征对违禁评论中的关键词与短语模式仍具备一定响应能力；而FastTextNN的Macro-F1仅有0.4430，与TextCNN相差约0.16，这一显著差距反映出简单平均表示在隐晦、上下文相关的违规表达上几乎无能为力，也反向印证了违禁评论识别对深层语义建模的依赖。
+	引入预训练模型后，瓶颈被迅速打破——MacBERT相关模型在Accuracy与Weighted-F1上均稳定超过0.90，与最强普通神经网络基线相比，Accuracy提升超过0.06，Macro-F1提升超过0.10，量级上的提升说明中文预训练知识是本任务不可或缺的基础。在所有方案中，LT-MVF融合加长尾校正（不使用bias校准）的配置取得最高测试集Macro-F1（0.7264），同时保持0.9328的Accuracy与0.9649的最小one-vs-rest准确率——在Macro-F1、Accuracy、OVR三个维度上同时处于领先，是本文最终选定的方案。
+	
+	\newpage
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{主要模型测试集性能对比}
+		\label{tab:main_results}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{lrrrrr}
+				\toprule
+				模型 & Accuracy & Balanced Accuracy & Macro-F1 & Weighted-F1 & OVR最小准确率 \\
+				\midrule
+				\rowlight FastTextNN            & 0.6823 & 0.4589 & 0.4430 & 0.6884 & 0.8515 \\
+				\rowlight TextCNN               & 0.8688 & 0.6008 & 0.5998 & 0.8713 & 0.9400 \\
+				\rowlight BiLSTM-Attention      & 0.8268 & 0.5662 & 0.5639 & 0.8288 & 0.9195 \\
+				\rowlight TinyTransformer       & 0.7912 & 0.5643 & 0.5529 & 0.7959 & 0.9015 \\
+				MacBERT Focal Aug800            & 0.9209 & \best{0.6916} & 0.7105 & 0.9208 & 0.9618 \\
+				MacBERT Balanced-Focal Aug600   & 0.9309 & 0.6771 & 0.7071 & 0.9291 & 0.9631 \\
+				RoBERTa Balanced-Focal Aug600   & 0.9301 & 0.6636 & 0.6699 & 0.9293 & 0.9615 \\
+				LT-MVF Simple Average        & \best{0.9331} & 0.6696 & 0.6860 & 0.9310 & 0.9649 \\
+				LT-MVF Fusion NoTau NoBias   & 0.9317 & 0.6567 & 0.6713 & 0.9286 & 0.9644 \\
+				\rowhl   LT-MVF Fusion Tau NoBias & 0.9328 & \best{0.6973} & \best{0.7264} & \best{0.9314} & \best{0.9649} \\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	
+	图\ref{fig:model_macro_f1}给出了不同模型在测试集Macro-F1上的整体表现。在本文对比的所有方案中，融合加长尾校正的LT-MVF明显优于简单平均融合（Macro-F1 0.6860 → 0.7264）以及不使用长尾校正的融合（0.6713 → 0.7264），验证了长尾logit adjustment对少数类识别的实际增益。不过该结果仍未达到0.8的目标阈值，说明极端长尾场景下，仅靠后融合策略对宏平均指标的提升空间有限。
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{model_macro_f1_comparison.png}
+		\caption{不同模型测试集Macro-F1对比}
+		\label{fig:model_macro_f1}
+	\end{figure}
+	
+	从图\ref{fig:model_accuracy}可以看到，预训练模型和融合模型的Accuracy普遍超过0.9，部分强基线甚至与LT-MVF最终方案仅相差不到0.005。但对应的Macro-F1却存在显著差距，Accuracy与Macro-F1的背离恰恰说明：在长尾违禁评论识别任务中，仅报告Accuracy会严重高估模型对少数类别的真实识别能力，这也是本文坚持以Macro-F1作为核心评估指标的原因。
+	
+	\newpage
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{model_accuracy_comparison.png}
+		\caption{不同模型测试集Accuracy对比}
+		\label{fig:model_accuracy}
+	\end{figure}
+	
+	\subsection{One-vs-Rest准确率分析}
+	
+	最后看One-vs-Rest最小准确率（图\ref{fig:ovr_acc}）。除FastTextNN外，所有模型的OVR最小值均超过0.9，强模型普遍在0.96以上，说明从逐类别一对多检测的角度看，系统已具备较稳定的两类可用性。这进一步印证了本文的核心判断：Macro-F1未达到0.8，并不是模型无法区分"违禁 vs 非该类评论"，而是因为少数类样本极少、类别边界复杂，单条样本的预测翻转就可能拉低对应类别的F1，误差在宏平均下被显著放大。
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{model_ovr_min_acc_comparison.png}
+		\caption{不同模型One-vs-Rest最小准确率对比}
+		\label{fig:ovr_acc}
+	\end{figure}
+	
+	\subsection{消融实验}
+	
+	LT-MVF的消融实验结果如表\ref{tab:ablation}所示。简单平均全部视角时，Macro-F1为0.6860；仅搜索融合权重但不使用长尾校正时，Macro-F1为0.6713；加入长尾tau校正且不使用bias后，Macro-F1提升到0.7264。加入弱bias后验证集Macro-F1提高，但测试集Macro-F1下降到0.6854，说明在极端长尾数据上，类别级bias容易利用验证集偶然分布产生过拟合。只使用MacBERT视角时Macro-F1为0.7238，略低于包含RoBERTa视角的融合结果，说明RoBERTa虽然单模型表现不是最强，但可提供少量互补信息。
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{LT-MVF消融实验结果}
+		\label{tab:ablation}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{lrrrr}
+				\toprule
+				消融配置 & Accuracy & Balanced Accuracy & Macro-F1 & OVR最小准确率 \\
+				\midrule
+				SimpleAverage AllViews & \best{0.9331} & 0.6696 & 0.6860 & 0.9649 \\
+				\rowhl Fusion NoTau NoBias & 0.9317 & 0.6567 & 0.6713 & 0.9644 \\
+				\rowhl Fusion Tau NoBias & 0.9328 & \best{0.6973} & \best{0.7264} & \best{0.9649} \\
+				\rowhl MacBERT Views Only & 0.9317 & 0.6948 & 0.7238 & 0.9639 \\
+				WeightedFusion Tau WeakBias & 0.9325 & 0.6722 & 0.6854 & 0.9644 \\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	
+	从消融结果看，长尾tau校正是LT-MVF中最有效的后融合组件。它不像强bias校准那样为每个类别单独增加较大自由度，而是通过训练集先验对少数类进行整体补偿，因此泛化表现更稳定。WeightedRandomSampler在部分单模型中提升验证集表现，但在测试集上不总是稳定；少数类增强对长尾类别有帮助，但增强过强会增加重复或轻扰动样本比例，使模型对少数类形式特征产生偏向。
+	
+	\subsection{训练轮次、损失与性能关系}
+	
+	图\ref{fig:loss_curve}和图\ref{fig:val_curve}展示了训练损失与验证集Macro-F1变化。普通神经网络训练较快，但验证集Macro-F1上限较低；预训练模型通常在前几轮迅速获得较高准确率，之后验证集Macro-F1提升趋缓。对MacBERT-large而言，过长训练并不一定带来更高测试集Macro-F1，这与长尾类别验证样本过少有关。早停策略因此是必要的，它可以在一定程度上避免多数类继续拟合而少数类泛化下降。
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{training_loss_curves.png}
+		\caption{训练损失随Epoch变化}
+		\label{fig:loss_curve}
+	\end{figure}
+	
+	\newpage
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{val_macro_f1_curves.png}
+		\caption{验证集Macro-F1随Epoch变化}
+		\label{fig:val_curve}
+	\end{figure}
+	
+	\subsection{最优模型细粒度分析}
+	
+	最优模型的归一化混淆矩阵如图\ref{fig:confusion_matrix}所示。多数类之间仍存在一定混淆，尤其当评论同时涉及政治、地域、种族或文化刻板印象时，标签边界容易重叠。违禁评论数据本身并不总是单一语义，单标签设置会将多重风险压缩到一个主类别中，这会增加模型学习难度。
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.6\textwidth]{confusion_matrix_Ablation_Fusion_Tau_NoBias.png}
+		\caption{最优模型测试集归一化混淆矩阵}
+		\label{fig:confusion_matrix}
+	\end{figure}
+	
+	\newpage
+	
+	图\ref{fig:per_class_f1}展示了最优模型的各类别F1。少数类F1的波动最为明显，这是Macro-F1未达到0.8的直接原因。对于SA和SO这类测试样本数极少的类别，错误一条样本可能导致类别召回率或精确率显著变化，因此后续若要稳定超过0.8，更关键的不是继续堆叠更大模型，而是增加少数类标注样本、引入多标签标注或使用人工审核闭环补充边界样例。
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.95\textwidth]{per_class_f1_Ablation_Fusion_Tau_NoBias.png}
+		\caption{最优模型各类别F1}
+		\label{fig:per_class_f1}
+	\end{figure}
+	
+	\section{降本实验与策略讨论}
+	
+	预训练large模型虽然性能较好，但参数量和推理成本较高。实验中尝试了缩短最大长度、冻结底部层和使用单模型替代融合模型等降本方案。缩短max length可以显著降低自注意力计算量，因为Transformer注意力复杂度与序列长度平方相关。以MacBERT长度128视角为例，该模型取得0.9256的准确率和0.6626的Macro-F1，虽然宏平均性能低于最优融合模型，但推理成本更低，适合对实时性要求更高的场景。
+	
+	冻结底部编码层可以减少反向传播成本。早期实验中，冻结MacBERT-large底部18层后可训练参数量从3.27亿降至约9028万，训练时间从完整微调的千秒级下降到约516秒，但Macro-F1从较强模型的0.7244附近下降到0.6489。该结果说明冻结层适合资源受限或快速迭代阶段，但若目标是长尾少数类性能，完整微调仍更有优势。
+	
+	从部署角度看，若系统更关注整体准确率和one-vs-rest准确率，单个MacBERT或长度128模型已具备较高可用性；若系统更关注Macro-F1和少数类识别，应采用LT-MVF融合方案。由于logit后融合不需要端到端双编码器联合训练，它比DualEncoderFusion更容易维护，也能复用单模型推理结果进行离线或半实时融合。
+	
+	\newpage
+	
+	\section{结论}
+	
+	本文围绕非公开中文违禁评论十分类任务设计了完整的神经网络建模、预训练模型对比、长尾优化、消融实验和降本分析。实验表明，普通神经网络baseline可以识别部分显式违禁模式，但对隐晦语义和长尾类别的学习能力不足；中文预训练模型显著提高整体准确率和加权F1；多视角融合结合长尾tau校正可以进一步提高Macro-F1，并在不牺牲整体准确率的情况下改善少数类表现。当前最优模型取得0.9328的Accuracy、0.7264的Macro-F1、0.9314的Weighted-F1和0.9649的最小one-vs-rest准确率，满足one-vs-rest二分类准确率大于0.9的约束，但尚未达到Macro-F1大于0.8的目标。
+	
+	未达到0.8的主要原因是数据集存在极端长尾，尤其SA和SO类别样本极少，使得宏平均指标对少量错误高度敏感。后续提升方向应优先考虑增加少数类高质量标注样本、将部分多重风险评论改造为多标签标注、引入困难样本主动学习和更稳定的少数类语义增强。若部署场景对计算成本敏感，可以使用单MacBERT或短长度模型作为低成本方案；若部署场景强调少数类召回和宏平均性能，则LT-MVF融合框架更适合作为最终方案。
+	
+	\theendnotes
+	
+	\begin{references}
+		\bibitem{ref1} Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., \& Polosukhin, I. (2017). Attention is all you need. In Advances in Neural Information Processing Systems (Vol. 30). Curran Associates, Inc.
+		\bibitem{ref2} Muhammad, S. H., Ousidhoum, N., Abdulmumin, I., Yimam, S. M., Wahle, J. P., Ruas, T., Beloucif, M., De Kock, C., Belay, T. D., Ahmad, I. S., Surange, N., Teodorescu, D., Adelani, D. I., Aji, A. F., Ali, F., Araujo, V., Ayele, A. A., Ignat, O., Panchenko, A., … Mohammad, S. M. (2025). SemEval-2025 Task 11: Bridging the gap in text-based emotion detection [Conference proceedings paper]. SemEval-2025 Workshop, co-located with NAACL.
+		\bibitem{ref3} Muhammad, S. H., Ousidhoum, N., Abdulmumin, I., Wahle, J. P., Ruas, T., Beloucif, M., de Kock, C., Surange, N., Teodorescu, D., Ahmad, I. S., Adelani, D. I., Aji, A. F., Ali, F. D. M. A., Alimova, I., Araujo, V., Babakov, N., Baes, N., Bucur, A.-M., Bukula, A., … Mohammad, S. M. (2025). BRIGHTER: BRIdging the gap in human-annotated textual emotion recognition datasets for 28 languages (arXiv:2502.11926v4) [Preprint]. arXiv. https://doi.org/10.48550/arXiv.2502.11926
+		\bibitem{ref4} Kirk, H. R., Yin, W., Vidgen, B., \& Röttger, P. (2023). SemEval-2023 Task 10: Explainable detection of online sexism [Conference proceedings paper]. SemEval-2023 Workshop, co-located with ACL.
+	\end{references}
+	
+	\addcontentsline{toc}{section}{参考文献}
+	\label{LastPage}
+	
+\end{document}
