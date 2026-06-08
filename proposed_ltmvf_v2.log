@@ -1,0 +1,200 @@
+nohup: ignoring input
+已加载中文字体文件：/zhudaofeng/NLP-NEW/simsun.ttc
+Matplotlib 识别到的字体名：SimSun
+使用设备：cuda
+GPU：NVIDIA L40S
+显存：44.52 GB
+MacBERT-large 本地路径：./hf_models/chinese-macbert-large
+RoBERTa-wwm-ext-large 本地路径：./hf_models/chinese-roberta-wwm-ext-large
+数据量：25100
+类别：['政治敏感', '色情', '种族歧视', '地域歧视', '微侵犯(MA)', '犯罪', '基于文化背景的刻板印象(SCB)', '宗教迷信', '性侵犯(SO)', '基于外表的刻板印象(SA)']
+
+类别分布：
+类别
+政治敏感                7084
+色情                  6564
+种族歧视                4488
+地域歧视                3106
+微侵犯(MA)             1594
+犯罪                  1145
+基于文化背景的刻板印象(SCB)     776
+宗教迷信                 241
+性侵犯(SO)               71
+基于外表的刻板印象(SA)         31
+Name: count, dtype: int64
+Train/Val/Test: 17570/3765/3765
+
+训练集原始类别计数：
+政治敏感: 4959
+色情: 4595
+种族歧视: 3141
+地域歧视: 2174
+微侵犯(MA): 1116
+犯罪: 801
+基于文化背景的刻板印象(SCB): 543
+宗教迷信: 169
+性侵犯(SO): 50
+基于外表的刻板印象(SA): 22
+
+将训练以下视角：
+- View1_MacBERT_Focal_Aug800_NoSampler_FGM
+- View2_MacBERT_FocalBCE_Aug800_Sampler_FGM
+- View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM
+- View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM
+- View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM
+
+========== 训练视角：View1_MacBERT_Focal_Aug800_NoSampler_FGM ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=257 增强后=800
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=631 增强后=800
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=750 增强后=800
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=778 增强后=800
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 54287.56it/s]
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=01 loss=0.3451 val_macroF1_raw=0.6516 val_acc_raw=0.8932 val_ovrMin_raw=0.9463
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=02 loss=0.0796 val_macroF1_raw=0.6778 val_acc_raw=0.9177 val_ovrMin_raw=0.9610
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=03 loss=0.0401 val_macroF1_raw=0.6747 val_acc_raw=0.9259 val_ovrMin_raw=0.9679
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=04 loss=0.0162 val_macroF1_raw=0.6984 val_acc_raw=0.9254 val_ovrMin_raw=0.9679
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=05 loss=0.0092 val_macroF1_raw=0.6888 val_acc_raw=0.9299 val_ovrMin_raw=0.9681
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] epoch=06 loss=0.0061 val_macroF1_raw=0.6773 val_acc_raw=0.9264 val_ovrMin_raw=0.9652
+[View1_MacBERT_Focal_Aug800_NoSampler_FGM] Early stopping at epoch 6.
+
+========== 训练视角：View2_MacBERT_FocalBCE_Aug800_Sampler_FGM ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=257 增强后=800
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=631 增强后=800
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=750 增强后=800
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=778 增强后=800
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 45769.66it/s]
+[View2_MacBERT_FocalBCE_Aug800_Sampler_FGM] epoch=01 loss=0.5824 val_macroF1_raw=0.6781 val_acc_raw=0.9086 val_ovrMin_raw=0.9649
+[View2_MacBERT_FocalBCE_Aug800_Sampler_FGM] epoch=02 loss=0.1227 val_macroF1_raw=0.6728 val_acc_raw=0.9166 val_ovrMin_raw=0.9639
+[View2_MacBERT_FocalBCE_Aug800_Sampler_FGM] epoch=03 loss=0.0660 val_macroF1_raw=0.6684 val_acc_raw=0.9182 val_ovrMin_raw=0.9631
+[View2_MacBERT_FocalBCE_Aug800_Sampler_FGM] Early stopping at epoch 3.
+
+========== 训练视角：View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 25099.06it/s]
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=01 loss=0.5088 val_macroF1_raw=0.6736 val_acc_raw=0.9139 val_ovrMin_raw=0.9580
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=02 loss=0.1770 val_macroF1_raw=0.6895 val_acc_raw=0.9193 val_ovrMin_raw=0.9644
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=03 loss=0.1252 val_macroF1_raw=0.6890 val_acc_raw=0.9256 val_ovrMin_raw=0.9628
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=04 loss=0.0960 val_macroF1_raw=0.6912 val_acc_raw=0.9286 val_ovrMin_raw=0.9655
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=05 loss=0.0763 val_macroF1_raw=0.6837 val_acc_raw=0.9301 val_ovrMin_raw=0.9665
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=06 loss=0.0705 val_macroF1_raw=0.7097 val_acc_raw=0.9288 val_ovrMin_raw=0.9655
+[View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM] epoch=07 loss=0.0680 val_macroF1_raw=0.6860 val_acc_raw=0.9296 val_ovrMin_raw=0.9655
+
+========== 训练视角：View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM ==========
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=331 增强后=500
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=450 增强后=500
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=478 增强后=500
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 13591.12it/s]
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=01 loss=0.2737 val_macroF1_raw=0.6911 val_acc_raw=0.8993 val_ovrMin_raw=0.9517
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=02 loss=0.0678 val_macroF1_raw=0.7101 val_acc_raw=0.9203 val_ovrMin_raw=0.9671
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=03 loss=0.0411 val_macroF1_raw=0.7173 val_acc_raw=0.9238 val_ovrMin_raw=0.9663
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=04 loss=0.0195 val_macroF1_raw=0.7432 val_acc_raw=0.9299 val_ovrMin_raw=0.9668
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=05 loss=0.0081 val_macroF1_raw=0.7027 val_acc_raw=0.9291 val_ovrMin_raw=0.9657
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] epoch=06 loss=0.0053 val_macroF1_raw=0.7102 val_acc_raw=0.9296 val_ovrMin_raw=0.9657
+[View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM] Early stopping at epoch 6.
+
+========== 训练视角：View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 14605.58it/s]
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] epoch=01 loss=0.4745 val_macroF1_raw=0.6612 val_acc_raw=0.9062 val_ovrMin_raw=0.9543
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] epoch=02 loss=0.1653 val_macroF1_raw=0.6783 val_acc_raw=0.9272 val_ovrMin_raw=0.9641
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] epoch=03 loss=0.1210 val_macroF1_raw=0.6795 val_acc_raw=0.9272 val_ovrMin_raw=0.9633
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] epoch=04 loss=0.0881 val_macroF1_raw=0.6782 val_acc_raw=0.9246 val_ovrMin_raw=0.9615
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] epoch=05 loss=0.0728 val_macroF1_raw=0.6723 val_acc_raw=0.9293 val_ovrMin_raw=0.9663
+[View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM] Early stopping at epoch 5.
+
+========== 融合搜索与消融实验 ==========
+[Ours_Full] fusion config:
+{
+  "view_names": [
+    "View1_MacBERT_Focal_Aug800_NoSampler_FGM",
+    "View2_MacBERT_FocalBCE_Aug800_Sampler_FGM",
+    "View3_MacBERT_BalancedFocal_Aug600_NoSampler_FGM",
+    "View4_MacBERT_Focal_Aug500_NoSampler_Len128_FGM",
+    "View5_RoBERTa_BalancedFocal_Aug600_NoSampler_FGM"
+  ],
+  "weights": [
+    0.020208406766561167,
+    0.006777684684763986,
+    0.19184884946718792,
+    0.6355212045304286,
+    0.14564385455105844
+  ],
+  "tau": 0.15,
+  "use_bias": true,
+  "bias": [
+    0.4000000059604645,
+    0.0,
+    -0.4000000059604645,
+    -0.4000000059604645,
+    -0.25,
+    0.15000000596046448,
+    0.4000000059604645,
+    0.15000000596046448,
+    0.0,
+    0.0
+  ],
+  "val_macro_f1": 0.7574151918593693,
+  "val_accuracy": 0.9378486055776892
+}
+[Ours_LTMVFv2_WeightedFusion_Tau_WeakBias] val_macroF1=0.7574 test_macroF1=0.6854 test_acc=0.9325 test_ovrMin=0.9644
+[Ablation_Fusion_Tau_NoBias] val_macroF1=0.7487 test_macroF1=0.7264 test_acc=0.9328 test_ovrMin=0.9649
+[Ablation_Fusion_NoTau_NoBias] val_macroF1=0.7473 test_macroF1=0.6713 test_acc=0.9317 test_ovrMin=0.9644
+[Ablation_MacBERT_Views_Only] val_macroF1=0.7490 test_macroF1=0.7238 test_acc=0.9317 test_ovrMin=0.9639
+[Ablation_SimpleAverage_AllViews] val_macroF1=0.6994 test_macroF1=0.6860 test_acc=0.9331 test_ovrMin=0.9649
+
+========== 最终最佳结果 ==========
+name                                             Ablation_Fusion_Tau_NoBias
+method_type                                              fusion_or_ablation
+model_path                                                       multi-view
+loss_type                                                            fusion
+max_len                                                               mixed
+batch_size                                                            mixed
+epochs_planned                                                        mixed
+epochs_ran                                                            mixed
+best_epoch                                                            mixed
+lr                                                                    mixed
+augment_min_per_class                                                 mixed
+use_sampler                                                           mixed
+use_fgm                                                               mixed
+total_params                                                            NaN
+trainable_params                                                        NaN
+seconds                                                                 0.0
+best_val_macro_f1                                                  0.748721
+val_accuracy                                                       0.934396
+val_macro_f1                                                       0.748721
+test_accuracy                                                      0.932802
+test_balanced_accuracy                                             0.697333
+test_macro_f1                                                      0.726446
+test_weighted_f1                                                   0.931375
+test_micro_f1                                                      0.932802
+test_ovr_acc_mean                                                   0.98656
+test_ovr_acc_min                                                    0.96494
+fusion_weights            [0.0865348595941755, 0.031234044900093568, 0.2...
+fusion_tau                                                             0.25
+fusion_use_bias                                                       False
+fusion_views                                                            NaN
+
+关键达标检查：
+Macro-F1 > 0.8: False，当前 0.7264
+Accuracy > 0.9: True，当前 0.9328
+One-vs-rest 二分类准确率均值 > 0.9: True，当前 0.9866
+One-vs-rest 二分类准确率最小值 > 0.9: True，当前 0.9649
+
+所有输出已保存至：/zhudaofeng/NLP-NEW/outputs_ltmvf_v2
+报告文件：/zhudaofeng/NLP-NEW/outputs_ltmvf_v2/report.md

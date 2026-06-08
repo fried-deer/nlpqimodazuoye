@@ -1,0 +1,464 @@
+nohup: ignoring input
+已加载中文字体文件：zhudaofeng/NLP-NEW/simsun.ttc
+Matplotlib 识别到的字体名：SimSun
+使用设备：cuda
+GPU：NVIDIA L40S
+显存：44.52 GB
+MacBERT-large 本地路径：./hf_models/chinese-macbert-large
+RoBERTa-wwm-ext-large 本地路径：./hf_models/chinese-roberta-wwm-ext-large
+数据量：25100
+类别：['政治敏感', '色情', '种族歧视', '地域歧视', '微侵犯(MA)', '犯罪', '基于文化背景的刻板印象(SCB)', '宗教迷信', '性侵犯(SO)', '基于外表的刻板印象(SA)']
+
+类别分布：
+类别
+政治敏感                7084
+色情                  6564
+种族歧视                4488
+地域歧视                3106
+微侵犯(MA)             1594
+犯罪                  1145
+基于文化背景的刻板印象(SCB)     776
+宗教迷信                 241
+性侵犯(SO)               71
+基于外表的刻板印象(SA)         31
+Name: count, dtype: int64
+Train/Val/Test: 17570/3765/3765
+
+将运行以下实验：
+- Baseline_FastTextNN
+- Baseline_TextCNN
+- Baseline_BiLSTM_Attention
+- Baseline_TinyTransformer
+- Best_MacBERT_large_FocalBCE_AugSampler_Bias
+- Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias
+- Ablation_no_OVRBCE_use_FocalOnly
+- Ablation_no_class_weight
+- Ablation_no_sampler
+- Ablation_no_augmentation
+- Ablation_no_bias_calibration
+- Ablation_short_maxlen_96
+- Cost_MacBERT_large_freeze_18_layers
+- Cost_RoBERTa_large_short_maxlen_128
+- Cost_RoBERTa_large_freeze_18_layers
+
+========== 训练实验：Baseline_FastTextNN ==========
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=331 增强后=500
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=450 增强后=500
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=478 增强后=500
+[Baseline_FastTextNN] epoch=01 loss=1.2628 val_macroF1=0.3429 val_acc=0.5142 val_ovrMean=0.9028 val_ovrMin=0.8135
+[Baseline_FastTextNN] epoch=02 loss=0.8500 val_macroF1=0.4162 val_acc=0.6183 val_ovrMean=0.9237 val_ovrMin=0.8319
+[Baseline_FastTextNN] epoch=03 loss=0.6448 val_macroF1=0.4523 val_acc=0.6587 val_ovrMean=0.9317 val_ovrMin=0.8529
+[Baseline_FastTextNN] epoch=04 loss=0.5478 val_macroF1=0.4593 val_acc=0.6898 val_ovrMean=0.9380 val_ovrMin=0.8606
+[Baseline_FastTextNN] epoch=05 loss=0.5237 val_macroF1=0.4542 val_acc=0.6680 val_ovrMean=0.9336 val_ovrMin=0.8661
+[Baseline_FastTextNN] epoch=06 loss=0.4984 val_macroF1=0.4546 val_acc=0.6688 val_ovrMean=0.9338 val_ovrMin=0.8675
+[Baseline_FastTextNN] Early stopping at epoch 6.
+
+========== 训练实验：Baseline_TextCNN ==========
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=331 增强后=500
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=450 增强后=500
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=478 增强后=500
+[Baseline_TextCNN] epoch=01 loss=0.4778 val_macroF1=0.5693 val_acc=0.8080 val_ovrMean=0.9616 val_ovrMin=0.9031
+[Baseline_TextCNN] epoch=02 loss=0.1285 val_macroF1=0.6046 val_acc=0.8523 val_ovrMean=0.9705 val_ovrMin=0.9264
+[Baseline_TextCNN] epoch=03 loss=0.0734 val_macroF1=0.6106 val_acc=0.8622 val_ovrMean=0.9724 val_ovrMin=0.9392
+[Baseline_TextCNN] epoch=04 loss=0.0495 val_macroF1=0.6219 val_acc=0.8696 val_ovrMean=0.9739 val_ovrMin=0.9429
+[Baseline_TextCNN] epoch=05 loss=0.0355 val_macroF1=0.6215 val_acc=0.8818 val_ovrMean=0.9764 val_ovrMin=0.9477
+[Baseline_TextCNN] epoch=06 loss=0.0307 val_macroF1=0.6329 val_acc=0.8784 val_ovrMean=0.9757 val_ovrMin=0.9471
+[Baseline_TextCNN] epoch=07 loss=0.0274 val_macroF1=0.6207 val_acc=0.8818 val_ovrMean=0.9764 val_ovrMin=0.9490
+[Baseline_TextCNN] epoch=08 loss=0.0268 val_macroF1=0.6190 val_acc=0.8807 val_ovrMean=0.9761 val_ovrMin=0.9487
+[Baseline_TextCNN] Early stopping at epoch 8.
+
+========== 训练实验：Baseline_BiLSTM_Attention ==========
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=331 增强后=500
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=450 增强后=500
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=478 增强后=500
+[Baseline_BiLSTM_Attention] epoch=01 loss=0.7103 val_macroF1=0.5063 val_acc=0.7493 val_ovrMean=0.9499 val_ovrMin=0.8863
+[Baseline_BiLSTM_Attention] epoch=02 loss=0.1999 val_macroF1=0.5530 val_acc=0.7950 val_ovrMean=0.9590 val_ovrMin=0.9052
+[Baseline_BiLSTM_Attention] epoch=03 loss=0.1371 val_macroF1=0.5727 val_acc=0.8138 val_ovrMean=0.9628 val_ovrMin=0.9139
+[Baseline_BiLSTM_Attention] epoch=04 loss=0.1057 val_macroF1=0.5768 val_acc=0.8244 val_ovrMean=0.9649 val_ovrMin=0.9166
+[Baseline_BiLSTM_Attention] epoch=05 loss=0.0858 val_macroF1=0.5677 val_acc=0.8159 val_ovrMean=0.9632 val_ovrMin=0.9153
+[Baseline_BiLSTM_Attention] epoch=06 loss=0.0730 val_macroF1=0.5769 val_acc=0.8343 val_ovrMean=0.9669 val_ovrMin=0.9203
+[Baseline_BiLSTM_Attention] epoch=07 loss=0.0707 val_macroF1=0.5794 val_acc=0.8324 val_ovrMean=0.9665 val_ovrMin=0.9185
+[Baseline_BiLSTM_Attention] epoch=08 loss=0.0625 val_macroF1=0.5743 val_acc=0.8244 val_ovrMean=0.9649 val_ovrMin=0.9190
+
+========== 训练实验：Baseline_TinyTransformer ==========
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=331 增强后=500
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=450 增强后=500
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=478 增强后=500
+[Baseline_TinyTransformer] epoch=01 loss=0.5267 val_macroF1=0.5570 val_acc=0.7408 val_ovrMean=0.9482 val_ovrMin=0.8776
+[Baseline_TinyTransformer] epoch=02 loss=0.2130 val_macroF1=0.6090 val_acc=0.7923 val_ovrMean=0.9585 val_ovrMin=0.9009
+[Baseline_TinyTransformer] epoch=03 loss=0.1419 val_macroF1=0.5941 val_acc=0.8072 val_ovrMean=0.9614 val_ovrMin=0.9078
+[Baseline_TinyTransformer] epoch=04 loss=0.1049 val_macroF1=0.5894 val_acc=0.8173 val_ovrMean=0.9635 val_ovrMin=0.9116
+[Baseline_TinyTransformer] Early stopping at epoch 4.
+
+========== 训练实验：Best_MacBERT_large_FocalBCE_AugSampler_Bias ==========
+[数据增强] 类别=犯罪 原训练样本=801 增强=99 增强后=900
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=357 增强后=900
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=731 增强后=900
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=850 增强后=900
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=878 增强后=900
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 13452.43it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=01 loss=0.8395 val_macroF1=0.6948 val_acc=0.9036 val_ovrMean=0.9807 val_ovrMin=0.9602
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=02 loss=0.1862 val_macroF1=0.7059 val_acc=0.9187 val_ovrMean=0.9837 val_ovrMin=0.9673
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=03 loss=0.1219 val_macroF1=0.7090 val_acc=0.9235 val_ovrMean=0.9847 val_ovrMin=0.9673
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=04 loss=0.0746 val_macroF1=0.6981 val_acc=0.9251 val_ovrMean=0.9850 val_ovrMin=0.9647
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=05 loss=0.0499 val_macroF1=0.6912 val_acc=0.9259 val_ovrMean=0.9852 val_ovrMin=0.9660
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] epoch=06 loss=0.0415 val_macroF1=0.6795 val_acc=0.9270 val_ovrMean=0.9854 val_ovrMin=0.9663
+[Best_MacBERT_large_FocalBCE_AugSampler_Bias] Early stopping at epoch 6.
+
+========== 训练实验：Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias ==========
+[数据增强] 类别=犯罪 原训练样本=801 增强=99 增强后=900
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=357 增强后=900
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=731 增强后=900
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=850 增强后=900
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=878 增强后=900
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 45630.85it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-roberta-wwm-ext-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=01 loss=0.7223 val_macroF1=0.6789 val_acc=0.9150 val_ovrMean=0.9830 val_ovrMin=0.9631
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=02 loss=0.1638 val_macroF1=0.6966 val_acc=0.9272 val_ovrMean=0.9854 val_ovrMin=0.9692
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=03 loss=0.1085 val_macroF1=0.7095 val_acc=0.9264 val_ovrMean=0.9853 val_ovrMin=0.9687
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=04 loss=0.0546 val_macroF1=0.6977 val_acc=0.9256 val_ovrMean=0.9851 val_ovrMin=0.9663
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=05 loss=0.0419 val_macroF1=0.7026 val_acc=0.9278 val_ovrMean=0.9856 val_ovrMin=0.9668
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] epoch=06 loss=0.0315 val_macroF1=0.6930 val_acc=0.9272 val_ovrMean=0.9854 val_ovrMin=0.9660
+[Compare_RoBERTa_wwm_ext_large_FocalBCE_AugSampler_Bias] Early stopping at epoch 6.
+
+========== 训练实验：Ablation_no_OVRBCE_use_FocalOnly ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 50401.77it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=01 loss=0.4821 val_macroF1=0.7058 val_acc=0.9142 val_ovrMean=0.9828 val_ovrMin=0.9644
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=02 loss=0.0772 val_macroF1=0.7305 val_acc=0.9110 val_ovrMean=0.9822 val_ovrMin=0.9610
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=03 loss=0.0397 val_macroF1=0.7091 val_acc=0.9238 val_ovrMean=0.9848 val_ovrMin=0.9671
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=04 loss=0.0182 val_macroF1=0.7416 val_acc=0.9246 val_ovrMean=0.9849 val_ovrMin=0.9676
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=05 loss=0.0119 val_macroF1=0.7366 val_acc=0.9254 val_ovrMean=0.9851 val_ovrMin=0.9676
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=06 loss=0.0079 val_macroF1=0.7423 val_acc=0.9288 val_ovrMean=0.9858 val_ovrMin=0.9692
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=07 loss=0.0077 val_macroF1=0.7432 val_acc=0.9259 val_ovrMean=0.9852 val_ovrMin=0.9671
+[Ablation_no_OVRBCE_use_FocalOnly] epoch=08 loss=0.0046 val_macroF1=0.7369 val_acc=0.9256 val_ovrMean=0.9851 val_ovrMin=0.9692
+
+========== 训练实验：Ablation_no_class_weight ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 47967.85it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_no_class_weight] epoch=01 loss=0.7871 val_macroF1=0.7228 val_acc=0.9137 val_ovrMean=0.9827 val_ovrMin=0.9671
+[Ablation_no_class_weight] epoch=02 loss=0.1830 val_macroF1=0.6931 val_acc=0.9201 val_ovrMean=0.9840 val_ovrMin=0.9633
+[Ablation_no_class_weight] epoch=03 loss=0.1287 val_macroF1=0.6974 val_acc=0.9251 val_ovrMean=0.9850 val_ovrMin=0.9649
+[Ablation_no_class_weight] Early stopping at epoch 3.
+
+========== 训练实验：Ablation_no_sampler ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 36346.11it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_no_sampler] epoch=01 loss=0.5768 val_macroF1=0.7101 val_acc=0.9137 val_ovrMean=0.9827 val_ovrMin=0.9591
+[Ablation_no_sampler] epoch=02 loss=0.1798 val_macroF1=0.7000 val_acc=0.9227 val_ovrMean=0.9845 val_ovrMin=0.9636
+[Ablation_no_sampler] epoch=03 loss=0.1167 val_macroF1=0.7476 val_acc=0.9275 val_ovrMean=0.9855 val_ovrMin=0.9673
+[Ablation_no_sampler] epoch=04 loss=0.0771 val_macroF1=0.7139 val_acc=0.9315 val_ovrMean=0.9863 val_ovrMin=0.9689
+[Ablation_no_sampler] epoch=05 loss=0.0396 val_macroF1=0.7098 val_acc=0.9272 val_ovrMean=0.9854 val_ovrMin=0.9681
+[Ablation_no_sampler] Early stopping at epoch 5.
+
+========== 训练实验：Ablation_no_augmentation ==========
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 41599.39it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_no_augmentation] epoch=01 loss=0.4959 val_macroF1=0.6846 val_acc=0.9057 val_ovrMean=0.9811 val_ovrMin=0.9623
+[Ablation_no_augmentation] epoch=02 loss=0.1002 val_macroF1=0.7138 val_acc=0.9219 val_ovrMean=0.9844 val_ovrMin=0.9644
+[Ablation_no_augmentation] epoch=03 loss=0.0646 val_macroF1=0.7141 val_acc=0.9275 val_ovrMean=0.9855 val_ovrMin=0.9689
+[Ablation_no_augmentation] epoch=04 loss=0.0453 val_macroF1=0.7079 val_acc=0.9286 val_ovrMean=0.9857 val_ovrMin=0.9684
+[Ablation_no_augmentation] epoch=05 loss=0.0344 val_macroF1=0.7144 val_acc=0.9270 val_ovrMean=0.9854 val_ovrMin=0.9665
+[Ablation_no_augmentation] epoch=06 loss=0.0243 val_macroF1=0.7091 val_acc=0.9304 val_ovrMean=0.9861 val_ovrMin=0.9665
+[Ablation_no_augmentation] epoch=07 loss=0.0165 val_macroF1=0.6997 val_acc=0.9288 val_ovrMean=0.9858 val_ovrMin=0.9665
+[Ablation_no_augmentation] Early stopping at epoch 7.
+
+========== 训练实验：Ablation_no_bias_calibration ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 51527.72it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_no_bias_calibration] epoch=01 loss=0.7136 val_macroF1=0.6943 val_acc=0.8911 val_ovrMean=0.9782 val_ovrMin=0.9546
+[Ablation_no_bias_calibration] epoch=02 loss=0.1671 val_macroF1=0.7223 val_acc=0.9084 val_ovrMean=0.9817 val_ovrMin=0.9628
+[Ablation_no_bias_calibration] epoch=03 loss=0.1071 val_macroF1=0.7195 val_acc=0.9118 val_ovrMean=0.9824 val_ovrMin=0.9660
+[Ablation_no_bias_calibration] epoch=04 loss=0.0577 val_macroF1=0.7091 val_acc=0.9201 val_ovrMean=0.9840 val_ovrMin=0.9660
+[Ablation_no_bias_calibration] Early stopping at epoch 4.
+
+========== 训练实验：Ablation_short_maxlen_96 ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 47127.01it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Ablation_short_maxlen_96] epoch=01 loss=0.7384 val_macroF1=0.7260 val_acc=0.9001 val_ovrMean=0.9800 val_ovrMin=0.9578
+[Ablation_short_maxlen_96] epoch=02 loss=0.1719 val_macroF1=0.7243 val_acc=0.9147 val_ovrMean=0.9829 val_ovrMin=0.9644
+[Ablation_short_maxlen_96] epoch=03 loss=0.1136 val_macroF1=0.7144 val_acc=0.9251 val_ovrMean=0.9850 val_ovrMin=0.9668
+[Ablation_short_maxlen_96] Early stopping at epoch 3.
+
+========== 训练实验：Cost_MacBERT_large_freeze_18_layers ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 50049.53it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-macbert-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Cost_MacBERT_large_freeze_18_layers] epoch=01 loss=0.6546 val_macroF1=0.7256 val_acc=0.9009 val_ovrMean=0.9802 val_ovrMin=0.9604
+[Cost_MacBERT_large_freeze_18_layers] epoch=02 loss=0.1821 val_macroF1=0.7046 val_acc=0.9078 val_ovrMean=0.9816 val_ovrMin=0.9625
+[Cost_MacBERT_large_freeze_18_layers] epoch=03 loss=0.1264 val_macroF1=0.7284 val_acc=0.9100 val_ovrMean=0.9820 val_ovrMin=0.9610
+[Cost_MacBERT_large_freeze_18_layers] epoch=04 loss=0.0907 val_macroF1=0.7185 val_acc=0.9139 val_ovrMean=0.9828 val_ovrMin=0.9633
+[Cost_MacBERT_large_freeze_18_layers] epoch=05 loss=0.0543 val_macroF1=0.7000 val_acc=0.9211 val_ovrMean=0.9842 val_ovrMin=0.9649
+[Cost_MacBERT_large_freeze_18_layers] Early stopping at epoch 5.
+
+========== 训练实验：Cost_RoBERTa_large_short_maxlen_128 ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 51600.68it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-roberta-wwm-ext-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Cost_RoBERTa_large_short_maxlen_128] epoch=01 loss=0.6694 val_macroF1=0.6950 val_acc=0.9179 val_ovrMean=0.9836 val_ovrMin=0.9647
+[Cost_RoBERTa_large_short_maxlen_128] epoch=02 loss=0.1472 val_macroF1=0.6624 val_acc=0.9155 val_ovrMean=0.9831 val_ovrMin=0.9623
+[Cost_RoBERTa_large_short_maxlen_128] epoch=03 loss=0.0879 val_macroF1=0.6896 val_acc=0.9246 val_ovrMean=0.9849 val_ovrMin=0.9668
+[Cost_RoBERTa_large_short_maxlen_128] Early stopping at epoch 3.
+
+========== 训练实验：Cost_RoBERTa_large_freeze_18_layers ==========
+[数据增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=57 增强后=600
+[数据增强] 类别=宗教迷信 原训练样本=169 增强=431 增强后=600
+[数据增强] 类别=性侵犯(SO) 原训练样本=50 增强=550 增强后=600
+[数据增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=578 增强后=600
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 50710.35it/s]
+[1mBertModel LOAD REPORT[0m from: ./hf_models/chinese-roberta-wwm-ext-large
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[Cost_RoBERTa_large_freeze_18_layers] epoch=01 loss=0.6202 val_macroF1=0.6964 val_acc=0.9049 val_ovrMean=0.9810 val_ovrMin=0.9607
+[Cost_RoBERTa_large_freeze_18_layers] epoch=02 loss=0.1486 val_macroF1=0.6840 val_acc=0.9070 val_ovrMean=0.9814 val_ovrMin=0.9602
+[Cost_RoBERTa_large_freeze_18_layers] epoch=03 loss=0.0927 val_macroF1=0.7045 val_acc=0.9243 val_ovrMean=0.9849 val_ovrMin=0.9641
+[Cost_RoBERTa_large_freeze_18_layers] epoch=04 loss=0.0512 val_macroF1=0.6944 val_acc=0.9211 val_ovrMean=0.9842 val_ovrMin=0.9657
+[Cost_RoBERTa_large_freeze_18_layers] epoch=05 loss=0.0347 val_macroF1=0.7166 val_acc=0.9222 val_ovrMean=0.9844 val_ovrMin=0.9652
+[Cost_RoBERTa_large_freeze_18_layers] epoch=06 loss=0.0233 val_macroF1=0.7234 val_acc=0.9307 val_ovrMean=0.9861 val_ovrMin=0.9665
+[Cost_RoBERTa_large_freeze_18_layers] epoch=07 loss=0.0186 val_macroF1=0.7104 val_acc=0.9296 val_ovrMean=0.9859 val_ovrMin=0.9673
+[Cost_RoBERTa_large_freeze_18_layers] epoch=08 loss=0.0183 val_macroF1=0.7042 val_acc=0.9288 val_ovrMean=0.9858 val_ovrMin=0.9681
+[Cost_RoBERTa_large_freeze_18_layers] Early stopping at epoch 8.
+
+========== 最终最佳结果 ==========
+name                                   Ablation_no_bias_calibration
+model_type                                                       hf
+bert_model                        ./hf_models/chinese-macbert-large
+max_len                                                         192
+batch_size                                                       16
+epochs_planned                                                    8
+epochs_ran                                                        4
+lr                                                         0.000015
+loss_name                                                 focal_bce
+use_class_weight                                               True
+use_sampler                                                    True
+augment_min_per_class                                           600
+label_smoothing                                                0.02
+freeze_layers                                                     0
+dropout                                                         0.2
+tune_bias                                                     False
+total_params                                              326582282
+trainable_params                                          326582282
+seconds                                                  718.993704
+best_val_macro_f1                                          0.722283
+test_accuracy                                               0.90332
+test_balanced_accuracy                                     0.726987
+test_macro_f1                                              0.724355
+test_weighted_f1                                           0.904827
+test_micro_f1                                               0.90332
+test_ovr_acc_mean                                          0.980664
+test_ovr_acc_min                                           0.958831
+raw_test_macro_f1_without_bias                             0.724355
+
+关键达标检查：
+Macro-F1 > 0.8: False，当前 0.7244
+One-vs-rest 二分类准确率均值 > 0.9: True，当前 0.9807
+One-vs-rest 二分类准确率最小值 > 0.9: True，当前 0.9588
+
+所有输出已保存至：zhudaofeng/NLP-NEW/outputs
+报告文件：zhudaofeng/NLP-NEW/outputs/report.md

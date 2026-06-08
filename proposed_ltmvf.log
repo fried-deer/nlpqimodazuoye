@@ -1,0 +1,116 @@
+nohup: ignoring input
+已加载中文字体文件：zhudaofeng/NLP-NEW/simsun.ttc
+Matplotlib 识别到的字体名：SimSun
+使用设备：cuda
+GPU：NVIDIA L40S
+显存：44.52 GB
+MacBERT-large 本地路径：./hf_models/chinese-macbert-large
+RoBERTa-wwm-ext-large 本地路径：./hf_models/chinese-roberta-wwm-ext-large
+数据量：25100
+类别：['政治敏感', '色情', '种族歧视', '地域歧视', '微侵犯(MA)', '犯罪', '基于文化背景的刻板印象(SCB)', '宗教迷信', '性侵犯(SO)', '基于外表的刻板印象(SA)']
+
+类别分布：
+类别
+政治敏感                7084
+色情                  6564
+种族歧视                4488
+地域歧视                3106
+微侵犯(MA)             1594
+犯罪                  1145
+基于文化背景的刻板印象(SCB)     776
+宗教迷信                 241
+性侵犯(SO)               71
+基于外表的刻板印象(SA)         31
+Name: count, dtype: int64
+Train/Val/Test: 17570/3765/3765
+
+========== 训练单编码器模型：MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=257 增强后=800
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=631 增强后=800
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=750 增强后=800
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=778 增强后=800
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 53504.71it/s]
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=01 loss=0.7343 val_macroF1=0.7561 val_acc=0.9131 val_ovrMin=0.9636
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=02 loss=0.1504 val_macroF1=0.7780 val_acc=0.9219 val_ovrMin=0.9641
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=03 loss=0.0891 val_macroF1=0.7326 val_acc=0.9203 val_ovrMin=0.9644
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=04 loss=0.0565 val_macroF1=0.7286 val_acc=0.9243 val_ovrMin=0.9644
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=05 loss=0.0300 val_macroF1=0.7387 val_acc=0.9317 val_ovrMin=0.9684
+[MacBERT_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] Early stopping at epoch 5.
+
+========== 训练单编码器模型：RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=257 增强后=800
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=631 增强后=800
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=750 增强后=800
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=778 增强后=800
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 54160.27it/s]
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=01 loss=0.6912 val_macroF1=0.6968 val_acc=0.9145 val_ovrMin=0.9612
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=02 loss=0.1349 val_macroF1=0.6913 val_acc=0.9293 val_ovrMin=0.9681
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=03 loss=0.0768 val_macroF1=0.7083 val_acc=0.9280 val_ovrMin=0.9687
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=04 loss=0.0446 val_macroF1=0.6982 val_acc=0.9309 val_ovrMin=0.9679
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=05 loss=0.0281 val_macroF1=0.7174 val_acc=0.9344 val_ovrMin=0.9705
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=06 loss=0.0225 val_macroF1=0.6854 val_acc=0.9357 val_ovrMin=0.9705
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=07 loss=0.0192 val_macroF1=0.7089 val_acc=0.9347 val_ovrMin=0.9697
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] epoch=08 loss=0.0193 val_macroF1=0.6982 val_acc=0.9347 val_ovrMin=0.9703
+[RoBERTa_large_FocalBCE_ClassWeight_Sampler_Aug_Bias] Early stopping at epoch 8.
+
+========== Ours：MacBERT + RoBERTa 加权 Logit 融合 + Bias Calibration ==========
+[Ours_LogitFusion] 最优 alpha=1.0000
+[Ours_LogitFusion] 验证集最优 macro-F1=0.7780
+[Ours_LogitFusion] bias=[0.6000000238418579, 1.5, -2.0, -2.0, -1.5, 1.0, -2.0, -1.5, 0.0, 1.5]
+[Ours_LogitFusion] test_macroF1=0.7033 test_acc=0.9158 ovr_min=0.9647
+
+========== 训练双编码器融合模型：DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias ==========
+[少数类增强] 类别=基于文化背景的刻板印象(SCB) 原训练样本=543 增强=157 增强后=700
+[少数类增强] 类别=宗教迷信 原训练样本=169 增强=531 增强后=700
+[少数类增强] 类别=性侵犯(SO) 原训练样本=50 增强=650 增强后=700
+[少数类增强] 类别=基于外表的刻板印象(SA) 原训练样本=22 增强=678 增强后=700
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 18932.52it/s]
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 391/391 [00:00<00:00, 12870.61it/s]
+[DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias] epoch=01 loss=0.8210 val_macroF1=0.6891 val_acc=0.8980 val_ovrMin=0.9578
+[DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias] epoch=02 loss=0.1711 val_macroF1=0.7254 val_acc=0.9155 val_ovrMin=0.9620
+[DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias] epoch=03 loss=0.1077 val_macroF1=0.7013 val_acc=0.9230 val_ovrMin=0.9649
+[DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias] epoch=04 loss=0.0594 val_macroF1=0.6996 val_acc=0.9208 val_ovrMin=0.9625
+[DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_AugSampler_Bias] Early stopping at epoch 4.
+
+========== 最终最佳结果 ==========
+name                      DualEncoderFusion_MacBERT_RoBERTa_FocalBCE_Aug...
+method_type                                             dual_encoder_fusion
+model_path                ./hf_models/chinese-macbert-large + ./hf_model...
+max_len                                                                 160
+batch_size                                                                4
+epochs_planned                                                            6
+epochs_ran                                                                4
+lr                                                                  0.00001
+augment_min_per_class                                                   700
+use_sampler                                                            True
+use_fgm                                                               False
+total_params                                                    663114250.0
+trainable_params                                                663114250.0
+seconds                                                         3285.675691
+best_val_macro_f1                                                  0.725445
+test_accuracy                                                      0.912351
+test_balanced_accuracy                                              0.69394
+test_macro_f1                                                      0.720104
+test_weighted_f1                                                   0.912938
+test_micro_f1                                                      0.912351
+test_ovr_acc_mean                                                   0.98247
+test_ovr_acc_min                                                   0.958831
+fusion_alpha_macbert                                                    NaN
+fusion_alpha_roberta                                                    NaN
+freeze_bottom_layers                                                    0.0
+
+关键达标检查：
+Macro-F1 > 0.8: False，当前 0.7201
+One-vs-rest 二分类准确率均值 > 0.9: True，当前 0.9825
+One-vs-rest 二分类准确率最小值 > 0.9: True，当前 0.9588
+
+所有输出已保存至：/zhudaofeng/NLP-NEW/outputs_ltmvf
+报告文件：/zhudaofeng/NLP-NEW/outputs_ltmvf/report.md
